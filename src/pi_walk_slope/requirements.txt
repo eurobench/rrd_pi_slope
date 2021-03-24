@@ -1,0 +1,7 @@
+wheel
+numpy
+pyyaml
+pandas
+scipy
+matplotlib
+termcolor
