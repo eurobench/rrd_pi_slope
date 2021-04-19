@@ -33,7 +33,7 @@ def get_joint_params(joint_data,gait_events):
         # Convert gait events from seconds to indices corresponding to time
         to = np.array([np.argmin(abs(ge-time)) for ge in gait_events[side+'_toe_off']])
         hc = np.array([np.argmin(abs(ge-time)) for ge in gait_events[side+'_heel_strike']])
-        
+
         if hc[0] < to[0]:
             # Starts with heel strike
             stance_range = [range(hc[i],to[i]) for i in range(np.min([len(to),len(hc)]))]
@@ -69,25 +69,45 @@ def print_joint_params(params):
             print('Right {}: {:.1f} +/- {:.1f} deg'.format(key[2:],np.mean(params[key]),np.std(params[key])))
 
 
-#%% Load data
-path_saving = 'Data'
-subject = '00'
-cond = '5'
-run = '00'
-for file in os.listdir(path_saving):
-    # Check whether it is subject and condition of interest
-    file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
-    file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
-    file_run = file.rsplit('run_')[-1].rsplit('_')[0]
-    if not (file_subj == subject and file_cond == cond and file_run == run):
-        continue
-    if 'gaitEvents' in file:
-        with open(os.path.join(path_saving,file),'r') as yaml_file:
-            gait_events = yaml.safe_load(yaml_file)
 
-    elif 'jointAngle' in file:
-        joint_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list') # Load joint data to dict of lists
 
-# Get joint parameters
-joint_params = get_joint_params(joint_data,gait_events)
-print_joint_params(joint_params)
+def main(fn_gait, fn_joint, folder_out):
+
+    # al is fine, continue
+
+    # TODO check file is read correctly
+    with open(fn_gait,'r') as yaml_file:
+        gait_events = yaml.safe_load(yaml_file)
+
+    # Load joint data to dict of lists
+    joint_data = pd.read_csv(fn_joint, sep=';').to_dict('list')
+
+    # Get joint parameters
+    joint_params = get_joint_params(joint_data, gait_events)
+    print_joint_params(joint_params)
+
+    return 0
+
+if __name__ == '__main__':
+    #%% Load data
+    path_saving = 'Data'
+    subject = '00'
+    cond = '5'
+    run = '00'
+    for file in os.listdir(path_saving):
+        # Check whether it is subject and condition of interest
+        file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
+        file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
+        file_run = file.rsplit('run_')[-1].rsplit('_')[0]
+        if not (file_subj == subject and file_cond == cond and file_run == run):
+            continue
+        if 'gaitEvents' in file:
+            with open(os.path.join(path_saving,file),'r') as yaml_file:
+                gait_events = yaml.safe_load(yaml_file)
+
+        elif 'jointAngle' in file:
+            joint_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list') # Load joint data to dict of lists
+
+    # Get joint parameters
+    joint_params = get_joint_params(joint_data,gait_events)
+    print_joint_params(joint_params)

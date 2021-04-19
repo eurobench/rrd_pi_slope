@@ -1,0 +1,43 @@
+#! /usr/bin/env python3
+
+import sys
+import os
+from pi_walk_slope.gait_phases import main
+from termcolor import colored
+
+USAGE = """ usage: run fn_gaitEvent output_folder
+-->fn_gaitEvent: file containing the gait event information
+-->output_folder: folder where the generated PI yaml files will be stored
+"""
+
+if __name__ == '__main__':
+
+    if len(sys.argv) != 3:
+        print(colored("Wrong input parameters !", "red"))
+        print(colored(USAGE, "yellow"))
+        sys.exit(-1)
+
+    fn_gait = sys.argv[1]
+    folder_out = sys.argv[2]
+
+    if not os.path.exists(fn_gait):
+        print(colored("Input file {} does not exist".format(fn_gait), "red"))
+        sys.exit(-1)
+
+    if not os.path.isfile(fn_gait):
+        print(colored("Input path {} is not a file".format(fn_gait), "red"))
+        sys.exit(-1)
+
+    if not os.path.exists(folder_out):
+        print(colored(
+            "Output folder {} does not exist".format(folder_out),
+            "red"))
+        sys.exit(-1)
+
+    if not os.path.isdir(folder_out):
+        print(colored(
+            "{} is not a folder".format(folder_out),
+            "red"))
+        sys.exit(-1)
+
+    sys.exit(main(fn_gait, folder_out))

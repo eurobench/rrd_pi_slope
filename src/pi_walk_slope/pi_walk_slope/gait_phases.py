@@ -87,20 +87,36 @@ def print_spatiotemporal_params(params):
         elif 'cadence' in key:
             print('Cadence: {:.1f} +/- {:.1f} SPM'.format(np.mean(params[key]),np.std(params[key])))
 
-#%% Load data
-path_saving = 'Data'
-subject = '00'
-cond = '5'
-for file in os.listdir(path_saving):
-    # Check whether it is subject and condition of interest
-    file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
-    file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
-    if not (file_subj == subject and file_cond == cond):
-        continue
-    if 'gaitEvents' in file:
-        with open(os.path.join(path_saving,file),'r') as yaml_file:
-            gait_events = yaml.safe_load(yaml_file)
-        # Determine gait phases
-        params = get_gait_spatiotemporal_params(gait_events)
-        print_spatiotemporal_params(params)
-        
+
+
+def main(fn_gait, folder_out):
+
+    # al is fine, continue
+
+    # TODO check file is read correctly
+    with open(fn_gait,'r') as yaml_file:
+        gait_events = yaml.safe_load(yaml_file)
+
+    # Determine gait phases
+    params = get_gait_spatiotemporal_params(gait_events)
+    print_spatiotemporal_params(params)
+
+    return 0
+
+if __name__ == '__main__':
+    #%% Load data
+    path_saving = 'Data'
+    subject = '00'
+    cond = '5'
+    for file in os.listdir(path_saving):
+        # Check whether it is subject and condition of interest
+        file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
+        file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
+        if not (file_subj == subject and file_cond == cond):
+            continue
+        if 'gaitEvents' in file:
+            with open(os.path.join(path_saving,file),'r') as yaml_file:
+                gait_events = yaml.safe_load(yaml_file)
+            # Determine gait phases
+            params = get_gait_spatiotemporal_params(gait_events)
+            print_spatiotemporal_params(params)
