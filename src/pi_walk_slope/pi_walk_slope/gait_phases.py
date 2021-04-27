@@ -19,9 +19,9 @@ def get_gait_spatiotemporal_params(gait_events):
     Returns
     -------
     params : dict.
-        Dictonary containing the gait phases of interest: 
+        Dictonary containing the gait phases of interest:
             As fraction of gait cycle for left and right:
-            - Stance phase 
+            - Stance phase
             - Swing phase
             - Single Support phase
             - Double support phase 1
@@ -34,8 +34,8 @@ def get_gait_spatiotemporal_params(gait_events):
      # Initialize params
     sides = ['l','r']
     params = {}
-    
-    
+
+
     # Determine single leg gait phases
     for side in sides:
         hc = gait_events[side+'_heel_strike']
@@ -49,7 +49,7 @@ def get_gait_spatiotemporal_params(gait_events):
             # Starts with toe-off
             params[side+'_t_stance'] = [(to[i+1]-hc[i])/t_gc[i] for i in range(np.min([len(to)-1,len(hc)]))]
         params[side+'_t_swing'] = [1 - val for val in params[side+'_t_stance']]
-    
+
     # Double support phases
     l_hc, l_to = gait_events['l_heel_strike'],gait_events['l_toe_off']
     r_hc, r_to = gait_events['r_heel_strike'],gait_events['r_toe_off']
@@ -71,11 +71,11 @@ def get_gait_spatiotemporal_params(gait_events):
         # single support
         t_stance = params[side+'_t_stance']
         params[side+'_t_single_support'] = [t_stance[i]-ds_1[i]-ds_2[i] for i in range(np.min([len(t_stance),len(ds_1),len(ds_2)]))]
-    
+
     # Cadence
     all_hc = np.sort(np.concatenate([l_hc,r_hc])) # steps
     params['cadence'] = 60/np.diff(all_hc) # steps per minute
-        
+
     return params
 
 def print_spatiotemporal_params(params):
@@ -86,7 +86,31 @@ def print_spatiotemporal_params(params):
             print('Right {}: {:.1f} +/- {:.1f}%'.format(key[2:],np.mean(params[key])*100,np.std(params[key])*100))
         elif 'cadence' in key:
             print('Cadence: {:.1f} +/- {:.1f} SPM'.format(np.mean(params[key]),np.std(params[key])))
+    print("All data:\n {}".format(params))
 
+def store_values(params, filename):
+
+    with open(filename, 'w') as my_file:
+        my_file.write('type: vector\n')
+
+        labels = []
+        values = []
+        for key in params:
+            if key.startswith('l') and not 'gait_cycle' in key:
+                labels.append('left {}'.format(key[4:]))
+                values.append(np.mean(params[key])*100)
+            elif key.startswith('r') and not 'gait_cycle' in key:
+                labels.append('right {}'.format(key[4:]))
+                values.append(np.mean(params[key])*100)
+            elif 'cadence' in key:
+                labels.append('cadence')
+                values.append(np.mean(params[key]))
+
+        labels = ', '.join(str(x) for x in labels)
+        values = ', '.join('{:.1f}'.format(x) for x in values)
+        my_file.write('label: [{}]\n'.format(labels))
+        my_file.write('value: [{}]\n'.format(values))
+    return True
 
 
 def main(fn_gait, folder_out):
@@ -100,6 +124,8 @@ def main(fn_gait, folder_out):
     # Determine gait phases
     params = get_gait_spatiotemporal_params(gait_events)
     print_spatiotemporal_params(params)
+    filename = "{}/pi_spatiotemporal.yaml".format(folder_out)
+    store_values(params, filename)
 
     return 0
 
