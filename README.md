@@ -26,11 +26,11 @@ Under Linux, assuming the folder `out` is already created:
 
 ```term
 # focusing on the gait analysis
-run_pi_gait Data/subject_00_cond_5_run_00_gaitEvents.yaml out
+run_pi_gait test/input/subject_00_cond_5_run_00_gaitEvents.yaml out
 # looking at the joint parameter as well
-run_pi_joint Data/subject_00_cond_5_run_00_gaitEvents.yaml Data/subject_00_cond_5_run_00_jointAngles.csv out
+run_pi_joint test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv out
 # combining both
-run_pi_walk_slope Data/subject_00_cond_5_run_00_gaitEvents.yaml Data/subject_00_cond_5_run_00_jointAngles.csv out
+run_pi_walk_slope test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv out
 ```
 
 ## Acknowledgements
