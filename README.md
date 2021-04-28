@@ -26,11 +26,30 @@ Under Linux, assuming the folder `out` is already created:
 
 ```term
 # focusing on the gait analysis
-run_pi_gait Data/subject_00_cond_5_run_00_gaitEvents.yaml out
+run_pi_gait test/input/subject_00_cond_5_run_00_gaitEvents.yaml out
 # looking at the joint parameter as well
-run_pi_joint Data/subject_00_cond_5_run_00_gaitEvents.yaml Data/subject_00_cond_5_run_00_jointAngles.csv out
+run_pi_joint test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv out
 # combining both
-run_pi_walk_slope Data/subject_00_cond_5_run_00_gaitEvents.yaml Data/subject_00_cond_5_run_00_jointAngles.csv out
+run_pi_walk_slope test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv out
+```
+
+## Docker image
+
+### Build from source
+
+_(only tested under Linux)_
+
+Run the following command in order to create the docker image for this PI:
+
+```console
+docker build . -t pi_walk_slope
+```
+### Launch the docker image
+
+Assuming `test/input` contains the input data, and that the directory `out/` is **already created**, and will contain the PI output:
+
+```shell
+docker run --rm -v $PWD/test/input:/in -v $PWD/out:/out pi_walk_slope run_pi_walk_slope /in/subject_00_cond_5_run_00_gaitEvents.yaml /in/subject_00_cond_5_run_00_jointAngles.csv /out
 ```
 
 ## Acknowledgements

@@ -1,0 +1,3 @@
+type: vector
+label: [left ankle_ic, left ankle_to, left ankle_max_swing, left ankle_max_stance, left hip_ic, left hip_to, left hip_max_swing, left hip_max_stance, left knee_ic, left knee_to, left knee_max_swing, left knee_max_stance, right ankle_ic, right ankle_to, right ankle_max_swing, right ankle_max_stance, right hip_ic, right hip_to, right hip_max_swing, right hip_max_stance, right knee_ic, right knee_to, right knee_max_swing, right knee_max_stance]
+value: [12.1, -15.6, 12.9, 27.6, 41.5, 12.0, 44.7, 42.1, 32.1, 56.5, 72.1, 56.3, 9.7, -20.0, 10.6, 27.8, 40.3, 11.2, 42.2, 40.0, 33.9, 53.0, 71.6, 52.7]

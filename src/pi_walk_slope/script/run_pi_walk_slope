@@ -4,6 +4,7 @@ from pi_walk_slope.gait_phases import main as main_gait
 from pi_walk_slope.joint_param import main as main_joint
 import sys
 import os
+from termcolor import colored
 
 if __name__ == '__main__':
 
