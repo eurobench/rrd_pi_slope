@@ -42,20 +42,20 @@ def get_joint_params(joint_data,gait_events):
             # Starts with toe off
             stance_range = [range(hc[i],to[i+1]) for i in range(np.min([len(to)-1,len(hc)]))]
             swing_range = [range(to[i],hc[i]) for i in range(np.min([len(to),len(hc)]))]
-            
+
         for joint in joints:
             # Only sagital plane (y) of interest
             angle = np.array(joint_data[side+'_'+joint+'_y'])
-            
+
             # Angle at initial contact
             joint_params[side+'_'+joint+'_ic'] = [angle[i] for i in hc]
-            
+
             # Angle at toe off
             joint_params[side+'_'+joint+'_to'] = [angle[i] for i in to]
-            
+
             # Maximal angle during swing
             joint_params[side+'_'+joint+'_max_swing'] = [angle[r].max() for r in swing_range]
-            
+
             # Maximal angle during stance
             joint_params[side+'_'+joint+'_max_stance'] = [angle[r].max() for r in stance_range]
 
@@ -69,7 +69,27 @@ def print_joint_params(params):
             print('Right {}: {:.1f} +/- {:.1f} deg'.format(key[2:],np.mean(params[key]),np.std(params[key])))
 
 
+def store_values(params, filename):
 
+    with open(filename, 'w') as my_file:
+        my_file.write('type: vector\n')
+
+        labels = []
+        values = []
+        for key in params:
+            if key.startswith('l'):
+                labels.append('left {}'.format(key[2:]))
+                values.append(np.mean(params[key]))
+            elif key.startswith('r') and not 'gait_cycle' in key:
+                labels.append('right {}'.format(key[2:]))
+                values.append(np.mean(params[key]))
+
+        labels = ', '.join(str(x) for x in labels)
+        values = ', '.join('{:.1f}'.format(x) for x in values)
+        my_file.write('label: [{}]\n'.format(labels))
+        my_file.write('value: [{}]\n'.format(values))
+
+    return True
 
 def main(fn_gait, fn_joint, folder_out):
 
@@ -85,7 +105,8 @@ def main(fn_gait, fn_joint, folder_out):
     # Get joint parameters
     joint_params = get_joint_params(joint_data, gait_events)
     print_joint_params(joint_params)
-
+    filename = "{}/pi_jointparams.yaml".format(folder_out)
+    store_values(joint_params, filename)
     return 0
 
 if __name__ == '__main__':
