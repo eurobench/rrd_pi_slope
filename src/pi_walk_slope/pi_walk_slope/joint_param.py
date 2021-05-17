@@ -105,7 +105,7 @@ def main(fn_gait, fn_joint, folder_out):
     # Get joint parameters
     joint_params = get_joint_params(joint_data, gait_events)
     print_joint_params(joint_params)
-    filename = "{}/pi_jointparams.yaml".format(folder_out)
+    filename = "{}/pi_joint_kinematics.yaml".format(folder_out)
     store_values(joint_params, filename)
     return 0
 
