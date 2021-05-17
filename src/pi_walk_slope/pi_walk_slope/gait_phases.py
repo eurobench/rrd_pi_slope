@@ -88,7 +88,7 @@ def print_spatiotemporal_params(params):
             print('Cadence: {:.1f} +/- {:.1f} SPM'.format(np.mean(params[key]),np.std(params[key])))
     print("All data:\n {}".format(params))
 
-def store_values(params, filename):
+def store_gait_values(params, filename):
 
     with open(filename, 'w') as my_file:
         my_file.write('type: vector\n')
@@ -102,9 +102,6 @@ def store_values(params, filename):
             elif key.startswith('r') and not 'gait_cycle' in key:
                 labels.append('right {}'.format(key[4:]))
                 values.append(np.mean(params[key])*100)
-            elif 'cadence' in key:
-                labels.append('cadence')
-                values.append(np.mean(params[key]))
 
         labels = ', '.join(str(x) for x in labels)
         values = ', '.join('{:.1f}'.format(x) for x in values)
@@ -112,6 +109,12 @@ def store_values(params, filename):
         my_file.write('value: [{}]\n'.format(values))
     return True
 
+def store_cadence_value(params, filename):
+
+    with open(filename, 'w') as my_file:
+        my_file.write('type: scalar\n')
+        my_file.write('value: {:.1f}\n'.format(np.mean(params['cadence'])))
+    return True
 
 def main(fn_gait, folder_out):
 
@@ -124,8 +127,10 @@ def main(fn_gait, folder_out):
     # Determine gait phases
     params = get_gait_spatiotemporal_params(gait_events)
     print_spatiotemporal_params(params)
-    filename = "{}/pi_spatiotemporal.yaml".format(folder_out)
-    store_values(params, filename)
+    filename = "{}/pi_gait_phase_duration.yaml".format(folder_out)
+    store_gait_values(params, filename)
+    filename = "{}/pi_cadence.yaml".format(folder_out)
+    store_cadence_value(params, filename)
 
     return 0
 
