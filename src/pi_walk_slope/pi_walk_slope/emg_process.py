@@ -17,7 +17,7 @@ def emg_envelope(emg,fs=1000,high=20,low=6,order=2):
     bl,al = ss.butter(order,low/(fs/2))
     emg_hp = ss.filtfilt(bh,ah,emg,axis=0)
     return ss.filtfilt(bl,al,abs(emg_hp),axis=0)
-     
+
 
 def visualize_joint_run(joint_data,gait_events,resample_len=1000):
     """
@@ -95,35 +95,43 @@ def visualize_emg_run(emg_data,gait_events,resample_len=1000):
                 else:
                     ax[i_muscle][i_side].set_xticklabels([])
 
+def main(fn_emg, fn_gait_event, folder_out):
 
+    # TODO check file is read correctly
+    with open(fn_gait_event,'r') as yaml_file:
+        gait_events = yaml.safe_load(yaml_file)
 
-#%% Data of 1 run
-path_saving = 'Data'
-subject = '00'
-cond = '5'
-run = '01'
-for file in os.listdir(path_saving):
-    # Check whether it is subject and condition of interest
-    file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
-    file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
-    file_run = file.rsplit('run_')[-1].rsplit('_')[0]
-    if not (file_subj == subject and file_cond == cond and file_run == run):
-        continue
-    if 'gaitEvents' in file:
-        with open(os.path.join(path_saving,file),'r') as yaml_file:
-            gait_events = yaml.safe_load(yaml_file)
+    emg_data = pd.read_csv(fn_emg, sep=';').to_dict('list')
+    visualize_emg_run(emg_data, gait_events)
 
-    elif 'jointAngle' in file:
-        joint_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list') # Load joint data to dict of lists
-    elif 'emg' in file:
-        emg_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list')
-visualize_joint_run(joint_data,gait_events)
-visualize_emg_run(emg_data,gait_events)
+if __name__ == '__main__':
+    #%% Data of 1 run
+    path_saving = 'Data'
+    subject = '00'
+    cond = '5'
+    run = '01'
+    for file in os.listdir(path_saving):
+        # Check whether it is subject and condition of interest
+        file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
+        file_cond = file.rsplit('cond_')[-1].rsplit('_')[0]
+        file_run = file.rsplit('run_')[-1].rsplit('_')[0]
+        if not (file_subj == subject and file_cond == cond and file_run == run):
+            continue
+        if 'gaitEvents' in file:
+            with open(os.path.join(path_saving,file),'r') as yaml_file:
+                gait_events = yaml.safe_load(yaml_file)
 
-#%% Data of all runs
-subject_list = [str(val) for val in np.unique([file.rsplit('subject_')[-1].rsplit('_')[0] for file in os.listdir(path_saving)])]
-for subj in subject_list:
-    file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
-    if not file_subj == subj:
-        continue
-    run_list 
+        elif 'jointAngle' in file:
+            joint_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list') # Load joint data to dict of lists
+        elif 'emg' in file:
+            emg_data = pd.read_csv(os.path.join(path_saving,file),sep=';').to_dict('list')
+    visualize_joint_run(joint_data,gait_events)
+    visualize_emg_run(emg_data,gait_events)
+
+    #%% Data of all runs
+    subject_list = [str(val) for val in np.unique([file.rsplit('subject_')[-1].rsplit('_')[0] for file in os.listdir(path_saving)])]
+    for subj in subject_list:
+        file_subj = file.rsplit('subject_')[-1].rsplit('_')[0]
+        if not file_subj == subj:
+            continue
+        run_list
