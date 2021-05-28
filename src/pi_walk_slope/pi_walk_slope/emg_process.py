@@ -60,7 +60,7 @@ def visualize_joint_run(joint_data,gait_events,resample_len=1000):
                 else:
                     ax[i_joint][i_side].set_xticklabels([])
 
-def visualize_emg_run(emg_data,gait_events,resample_len=1000):
+def visualize_emg_run(emg_data, joint_data, gait_events,resample_len=1000):
     """
     Parameters
     ----------
@@ -95,14 +95,17 @@ def visualize_emg_run(emg_data,gait_events,resample_len=1000):
                 else:
                     ax[i_muscle][i_side].set_xticklabels([])
 
-def main(fn_emg, fn_gait_event, folder_out):
+def main(fn_emg, fn_gait_event, fn_joint, folder_out):
 
+    emg_data = pd.read_csv(fn_emg, sep=';').to_dict('list')
     # TODO check file is read correctly
     with open(fn_gait_event,'r') as yaml_file:
         gait_events = yaml.safe_load(yaml_file)
 
-    emg_data = pd.read_csv(fn_emg, sep=';').to_dict('list')
-    visualize_emg_run(emg_data, gait_events)
+    # Load joint data to dict of lists
+    joint_data = pd.read_csv(fn_joint, sep=';').to_dict('list')
+
+    visualize_emg_run(emg_data, joint_data, gait_events)
 
 if __name__ == '__main__':
     #%% Data of 1 run
