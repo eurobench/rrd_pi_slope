@@ -18,7 +18,7 @@ def emg_envelope(emg,fs=1000,high=20,low=6,order=2):
     emg_hp = ss.filtfilt(bh,ah,emg,axis=0)
     return ss.filtfilt(bl,al,abs(emg_hp),axis=0)
 
-def visualize_emg_run(emg_data, gait_events,resample_len=1000):
+def visualize_emg_run(emg_data, gait_events, picture_name, resample_len=1000):
     """
     Parameters
     ----------
@@ -52,12 +52,15 @@ def visualize_emg_run(emg_data, gait_events,resample_len=1000):
                     ax[i_muscle][i_side].set_xlabel('Gait cycle (%)')
                 else:
                     ax[i_muscle][i_side].set_xticklabels([])
+    plt.savefig(picture_name)
 
-def main(fn_emg, fn_gait_event, fn_joint, folder_out):
+def main(fn_emg, fn_gait_event, folder_out):
 
     emg_data = pd.read_csv(fn_emg, sep=';').to_dict('list')
     # TODO check file is read correctly
     with open(fn_gait_event,'r') as yaml_file:
         gait_events = yaml.safe_load(yaml_file)
 
-    visualize_emg_run(emg_data, gait_events)
+    picture_name = folder_out + "/emg.png"
+    visualize_emg_run(emg_data, gait_events, picture_name)
+    print ("done")

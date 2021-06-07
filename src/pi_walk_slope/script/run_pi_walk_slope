@@ -2,20 +2,30 @@
 
 from pi_walk_slope.gait_phases import main as main_gait
 from pi_walk_slope.joint_param import main as main_joint
+from pi_walk_slope.emg_process import main as main_emg
 import sys
 import os
 from termcolor import colored
 
+
+USAGE = """ usage: run fn_gaitEvent fn_joint fn_emg output_folder
+-->fn_gaitEvent: file containing the gait event information
+-->fn_joint: file containing the joint angles measured
+-->fn_emg: file containing the emg information
+-->output_folder: folder where the generated PI yaml files will be stored
+"""
+
 if __name__ == '__main__':
 
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print(colored("Wrong input parameters !", "red"))
         print(colored(USAGE, "yellow"))
         sys.exit(-1)
 
     fn_gait = sys.argv[1]
     fn_joint = sys.argv[2]
-    folder_out = sys.argv[3]
+    fn_emg = sys.argv[3]
+    folder_out = sys.argv[4]
 
     if not os.path.exists(fn_gait):
         print(colored("Input file {} does not exist".format(fn_gait), "red"))
@@ -32,6 +42,15 @@ if __name__ == '__main__':
     if not os.path.isfile(fn_joint):
         print(colored("Input path {} is not a file".format(fn_joint), "red"))
         sys.exit(-1)
+
+    if not os.path.exists(fn_emg):
+        print(colored("Input file {} does not exist".format(fn_emg), "red"))
+        sys.exit(-1)
+
+    if not os.path.isfile(fn_emg):
+        print(colored("Input path {} is not a file".format(fn_emg), "red"))
+        sys.exit(-1)
+
     if not os.path.exists(folder_out):
         print(colored(
             "Output folder {} does not exist".format(folder_out),
@@ -47,5 +66,6 @@ if __name__ == '__main__':
     # all good, go for computation
     result = main_gait(fn_gait, folder_out)
     result2 = main_joint(fn_gait, fn_joint, folder_out)
+    result3 = main_emg(fn_emg, fn_gait, folder_out)
     # TODO see how to combine both results
     sys.exit(result2)
