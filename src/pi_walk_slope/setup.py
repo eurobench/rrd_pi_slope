@@ -21,7 +21,7 @@ setup(
     url='https://github.com/',
     license='Beerware',
     packages= find_packages(),
-    scripts=['script/run_pi_walk_slope', 'script/run_pi_joint', 'script/run_pi_gait'],
+    scripts=['script/run_pi_walk_slope', 'script/run_pi_joint', 'script/run_pi_gait', 'script/run_pi_emg'],
     include_package_data=True,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
