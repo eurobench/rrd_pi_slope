@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test_plan>
 <test pi_name="run_pi_walk_slope"
-      parameters="/in/subject_00_cond_5_run_00_gaitEvents.yaml /in/subject_00_cond_5_run_00_jointAngles.csv /in/subject_00_cond_5_run_01_emg.csv /out"
+      parameters="/in/subject_00_cond_5_run_00_gaitEvents.yaml /in/subject_00_cond_5_run_00_jointAngles.csv /in/subject_00_cond_5_run_00_emg.csv /out"
       input_folder="input"
       output_folder="output"
       exclude_extension="[.png]"/>

@@ -30,9 +30,9 @@ run_pi_gait test/input/subject_00_cond_5_run_00_gaitEvents.yaml out
 # looking at the joint parameter as well
 run_pi_joint test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv out
 # checking th emg file:
-run_pi_emg test/input/subject_00_cond_5_run_01_emg.csv test/input/subject_00_cond_5_run_00_gaitEvents.yaml out
+run_pi_emg test/input/subject_00_cond_5_run_00_emg.csv test/input/subject_00_cond_5_run_00_gaitEvents.yaml out
 # combining the three
-run_pi_walk_slope test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv test/input/subject_00_cond_5_run_01_emg.csv out
+run_pi_walk_slope test/input/subject_00_cond_5_run_00_gaitEvents.yaml test/input/subject_00_cond_5_run_00_jointAngles.csv test/input/subject_00_cond_5_run_00_emg.csv out
 ```
 
 ## Docker image
