@@ -51,7 +51,7 @@ docker build . -t pi_walk_slope
 Assuming `test/input` contains the input data, and that the directory `out/` is **already created**, and will contain the PI output:
 
 ```shell
-docker run --rm -v $PWD/test/input:/in -v $PWD/out:/out pi_walk_slope run_pi_walk_slope /in/subject_00_cond_5_run_00_gaitEvents.yaml /in/subject_00_cond_5_run_00_jointAngles.csv /in/subject_00_cond_5_run_01_emg.csv /out
+docker run --rm -v $PWD/test/input:/in -v $PWD/out:/out pi_walk_slope run_pi_walk_slope /in/subject_00_cond_5_run_00_gaitEvents.yaml /in/subject_00_cond_5_run_00_jointAngles.csv /in/subject_00_cond_5_run_00_emg.csv /out
 ```
 
 ## Acknowledgements
