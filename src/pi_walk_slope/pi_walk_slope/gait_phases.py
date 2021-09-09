@@ -44,10 +44,10 @@ def get_gait_spatiotemporal_params(gait_events):
         params[side+'_t_gait_cycle'] = t_gc
         if hc[0] < to[0]:
             # Starts with heel strike
-            params[side+'_t_stance'] = [(to[i]-hc[i])/t_gc[i] for i in range(np.min([len(to),len(hc)]))]
+            params[side+'_t_stance'] = [(to[i]-hc[i])/t_gc[i] for i in range(np.min([len(to),len(hc),len(t_gc)]))]
         else:
             # Starts with toe-off
-            params[side+'_t_stance'] = [(to[i+1]-hc[i])/t_gc[i] for i in range(np.min([len(to)-1,len(hc)]))]
+            params[side+'_t_stance'] = [(to[i+1]-hc[i])/t_gc[i] for i in range(np.min([len(to)-1,len(hc),len(t_gc)]))]
         params[side+'_t_swing'] = [1 - val for val in params[side+'_t_stance']]
 
     # Double support phases
