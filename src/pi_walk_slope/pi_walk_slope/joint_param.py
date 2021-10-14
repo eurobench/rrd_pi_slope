@@ -31,9 +31,13 @@ def get_joint_params(joint_data,gait_events):
     time = np.array(joint_data['time'])
     for side in sides:
         # Convert gait events from seconds to indices corresponding to time
-        to = np.array([np.argmin(abs(ge-time)) for ge in gait_events[side+'_toe_off']])
-        hc = np.array([np.argmin(abs(ge-time)) for ge in gait_events[side+'_heel_strike']])
-
+        to_ = [np.argmin(abs(ge-time)) for ge in gait_events[side+'_toe_off']]
+        hc_ = [np.argmin(abs(ge-time)) for ge in gait_events[side+'_heel_strike']]
+        
+        # Check order of to/hc for missing samples
+        to,hc = check_order(to_,hc_)
+        to,hc = np.array(to),np.array(hc) # Convert to arrays
+        
         if hc[0] < to[0]:
             # Starts with heel strike
             stance_range = [range(hc[i],to[i]) for i in range(np.min([len(to),len(hc)]))]
@@ -67,6 +71,45 @@ def print_joint_params(params):
             print('Left {}: {:.1f} +/- {:.1f} deg'.format(key[2:],np.mean(params[key]),np.std(params[key])))
         elif key.startswith('r') and not 'gait_cycle' in key:
             print('Right {}: {:.1f} +/- {:.1f} deg'.format(key[2:],np.mean(params[key]),np.std(params[key])))
+
+def check_order(list_a: list,list_b: list):
+    """
+    This function checks whether the order of the combined lists matches the
+    pattern [a0,b0,a1,b1..an,bn]. If not, it finds the longest occurence of 
+    the pattern and returns the new lists.
+    
+    Parameters
+    ----------
+    list_a : list
+        list containing ordered values of a
+    list_b : list
+        list containing ordered values of b
+
+    Returns
+    -------
+    list_a_new : list
+    list_b_new: list
+        
+    """
+    combined = np.sort(list_a+list_b)
+    
+    # Find where pattern is a,b,a,b,etc
+    arr = abs(np.diff(np.array([x in list_a for x in combined]).astype(int)))
+    
+    # If the difference between subsequent values is not 1, the pattern does not match
+    pattern_arr = np.split(combined,np.where(arr!=1)[0]+1)
+    
+    # Find longest occurence of pattern
+    longest_arr = pattern_arr[np.argmax([arr.size for arr in pattern_arr])]
+    
+    # Reconstruct list_a & list_b
+    if longest_arr[0] in list_a: # If a0 is earlier than b0
+        list_a_new = longest_arr[::2]
+        list_b_new = longest_arr[1:][::2]
+    else: 
+        list_a_new = longest_arr[1:][::2]
+        list_b_new = longest_arr[::2]
+    return list_a_new, list_b_new
 
 
 def store_values(params, filename):
